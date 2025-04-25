@@ -1,0 +1,58 @@
+import java.util.*;
+
+public class GroupWordsByCharacterSet {
+
+    // Function to group words by their unique character set
+    public static void groupWords(String[] words) {
+        // Map to hold the character set key and list of words
+        HashMap<String, List<String>> map = new HashMap<>();
+
+        for (String word : words) {
+            // Create a character set key for the word
+            String key = getCharKey(word);
+
+            // Add word to the correct group in the map
+            map.computeIfAbsent(key, k -> new ArrayList<>()).add(word);
+        }
+
+        // Print grouped words
+        for (List<String> group : map.values()) {
+            if (group.size() > 1) { // Only print groups with more than one word
+                for (String w : group) {
+                    System.out.print(w + ", ");
+                }
+                System.out.println(); // New line for each group
+            }
+        }
+    }
+
+    // Generate a sorted key of unique characters
+    private static String getCharKey(String word) {
+        Set<Character> charSet = new HashSet<>();
+        for (char c : word.toCharArray()) {
+            charSet.add(c);
+        }
+
+        // Convert set to char array and sort
+        char[] chars = new char[charSet.size()];
+        int i = 0;
+        for (char c : charSet) {
+            chars[i++] = c;
+        }
+        Arrays.sort(chars);
+
+        return new String(chars);
+    }
+
+    // Main method to test
+    public static void main(String[] args) {
+        String[] words = {
+                "may", "student", "students", "dog", "studentssess", "god",
+                "cat", "act", "tab", "bat", "flow", "wolf", "lambs", "amy",
+                "yam", "balms", "looped", "poodle"
+        };
+
+        System.out.println("Grouped words with same unique character set:");
+        groupWords(words);
+    }
+}
