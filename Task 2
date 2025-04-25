@@ -1,0 +1,48 @@
+import java.util.*;
+
+public class MinHeapDescendingSort {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Step 1: Read the number of elements from the user
+        System.out.print("Enter number of elements: ");
+        int n = scanner.nextInt();
+
+        // Step 2: Read the elements into the array
+        int[] arr = new int[n];
+        System.out.println("Enter the elements:");
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        // Step 3: Sort the array in decreasing order using min-heap
+        int[] sorted = heapSortDescending(arr);
+
+        // Step 4: Print the sorted array
+        System.out.println("Sorted array in decreasing order:");
+        for (int num : sorted) {
+            System.out.print(num + " ");
+        }
+    }
+
+    // Function to sort the array in decreasing order using min-heap
+    public static int[] heapSortDescending(int[] arr) {
+        // Step 1: Create a min-heap (PriorityQueue in Java is min-heap by default)
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+
+        // Step 2: Add all elements from the array to the min-heap
+        for (int num : arr) {
+            minHeap.add(num);
+        }
+
+        // Step 3: Extract the elements from the min-heap in increasing order
+        // and store them into a temporary array in reverse order
+        int[] temp = new int[arr.length];
+        for (int i = arr.length - 1; i >= 0; i--) {
+            temp[i] = minHeap.poll(); // poll() removes and returns the smallest element
+        }
+
+        return temp; // this array is now sorted in descending order
+    }
+}
