@@ -1,0 +1,183 @@
+import java.util.Scanner;
+
+public class LinkedListUnionIntersection {
+
+    // Inner class Node
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int d) {
+            data = d;
+            next = null;
+        }
+    }
+
+    // Insert at beginning
+    static Node insert(Node head, int data) {
+        Node temp = new Node(data);
+        temp.next = head;
+        return temp;
+    }
+
+    // Merge sort
+    static Node mergeSort(Node head) {
+        if (head == null || head.next == null)
+            return head;
+
+        Node middle = getMiddle(head);
+        Node nextOfMiddle = middle.next;
+        middle.next = null;
+
+        Node left = mergeSort(head);
+        Node right = mergeSort(nextOfMiddle);
+
+        return sortedMerge(left, right);
+    }
+
+    // Merge two sorted lists
+    static Node sortedMerge(Node a, Node b) {
+        if (a == null) return b;
+        if (b == null) return a;
+
+        Node result;
+        if (a.data <= b.data) {
+            result = a;
+            result.next = sortedMerge(a.next, b);
+        } else {
+            result = b;
+            result.next = sortedMerge(a, b.next);
+        }
+        return result;
+    }
+
+    // Get middle node for merge sort
+    static Node getMiddle(Node head) {
+        if (head == null) return head;
+        Node slow = head, fast = head.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    // Get intersection of two sorted lists
+    static Node getIntersection(Node head1, Node head2) {
+        Node dummy = new Node(0);
+        Node tail = dummy;
+
+        while (head1 != null && head2 != null) {
+            if (head1.data == head2.data) {
+                tail.next = new Node(head1.data);
+                tail = tail.next;
+                head1 = head1.next;
+                head2 = head2.next;
+            } else if (head1.data < head2.data) {
+                head1 = head1.next;
+            } else {
+                head2 = head2.next;
+            }
+        }
+        return removeDuplicates(dummy.next);
+    }
+
+    // Get union of two sorted lists
+    static Node getUnion(Node head1, Node head2) {
+        Node dummy = new Node(0);
+        Node tail = dummy;
+
+        while (head1 != null && head2 != null) {
+            if (head1.data == head2.data) {
+                tail.next = new Node(head1.data);
+                tail = tail.next;
+                head1 = head1.next;
+                head2 = head2.next;
+            } else if (head1.data < head2.data) {
+                tail.next = new Node(head1.data);
+                tail = tail.next;
+                head1 = head1.next;
+            } else {
+                tail.next = new Node(head2.data);
+                tail = tail.next;
+                head2 = head2.next;
+            }
+        }
+
+        while (head1 != null) {
+            tail.next = new Node(head1.data);
+            tail = tail.next;
+            head1 = head1.next;
+        }
+
+        while (head2 != null) {
+            tail.next = new Node(head2.data);
+            tail = tail.next;
+            head2 = head2.next;
+        }
+
+        return removeDuplicates(dummy.next);
+    }
+
+    // Remove duplicates from a sorted list
+    static Node removeDuplicates(Node head) {
+        Node current = head;
+        while (current != null && current.next != null) {
+            if (current.data == current.next.data) {
+                current.next = current.next.next;
+            } else {
+                current = current.next;
+            }
+        }
+        return head;
+    }
+
+    // Print linked list
+    static void printList(Node head) {
+        while (head != null) {
+            System.out.print(head.data + (head.next != null ? " -> " : ""));
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    // MAIN with input from keyboard
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input for List 1
+        System.out.print("Enter number of elements in List1: ");
+        int n1 = scanner.nextInt();
+        Node list1 = null;
+        System.out.println("Enter " + n1 + " elements for List1:");
+        for (int i = 0; i < n1; i++) {
+            int data = scanner.nextInt();
+            list1 = insert(list1, data);
+        }
+
+        // Input for List 2
+        System.out.print("Enter number of elements in List2: ");
+        int n2 = scanner.nextInt();
+        Node list2 = null;
+        System.out.println("Enter " + n2 + " elements for List2:");
+        for (int i = 0; i < n2; i++) {
+            int data = scanner.nextInt();
+            list2 = insert(list2, data);
+        }
+
+        // Sort both lists
+        list1 = mergeSort(list1);
+        list2 = mergeSort(list2);
+
+        // Get union and intersection
+        Node intersection = getIntersection(list1, list2);
+        Node union = getUnion(list1, list2);
+
+        // Output results
+        System.out.print("Intersection List: ");
+        printList(intersection);
+
+        System.out.print("Union List: ");
+        printList(union);
+    }
+}
