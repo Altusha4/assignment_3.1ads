@@ -1,0 +1,57 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class MergeSortedHalves {
+
+    // Function to merge two sorted halves into a fully sorted array
+    public static void mergeHalves(int[] arr, int mid) {
+        int n = arr.length;
+
+        int[] left = Arrays.copyOfRange(arr, 0, mid + 1);
+        int[] right = Arrays.copyOfRange(arr, mid + 1, n);
+
+        int i = 0, j = 0, k = 0;
+
+        // Merge two halves
+        while (i < left.length && j < right.length) {
+            if (left[i] <= right[j]) {
+                arr[k++] = left[i++];
+            } else {
+                arr[k++] = right[j++];
+            }
+        }
+
+        // Copy remaining elements
+        while (i < left.length) {
+            arr[k++] = left[i++];
+        }
+        while (j < right.length) {
+            arr[k++] = right[j++];
+        }
+    }
+
+    // Main with keyboard input
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input size
+        System.out.print("Enter number of elements in array: ");
+        int n = scanner.nextInt();
+
+        int[] arr = new int[n];
+        System.out.println("Enter " + n + " integers (first and second half sorted):");
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        // Calculate mid index (0-based)
+        int mid = (n - 1) / 2;
+
+        // Merge sorted halves
+        mergeHalves(arr, mid);
+
+        // Print result
+        System.out.println("Sorted merged array:");
+        System.out.println(Arrays.toString(arr));
+    }
+}
