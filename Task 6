@@ -1,0 +1,82 @@
+import java.util.*;
+
+public class PairWithGivenSum {
+
+    // Merge sort
+    public static void mergeSort(int[] arr, int left, int right) {
+        if (left < right) {
+            int mid = (left + right) / 2;
+            mergeSort(arr, left, mid);
+            mergeSort(arr, mid + 1, right);
+            merge(arr, left, mid, right);
+        }
+    }
+
+    public static void merge(int[] arr, int left, int mid, int right) {
+        int[] leftArr = Arrays.copyOfRange(arr, left, mid + 1);
+        int[] rightArr = Arrays.copyOfRange(arr, mid + 1, right + 1);
+
+        int i = 0, j = 0, k = left;
+        while (i < leftArr.length && j < rightArr.length) {
+            if (leftArr[i] <= rightArr[j]) {
+                arr[k++] = leftArr[i++];
+            } else {
+                arr[k++] = rightArr[j++];
+            }
+        }
+        while (i < leftArr.length) arr[k++] = leftArr[i++];
+        while (j < rightArr.length) arr[k++] = rightArr[j++];
+    }
+
+    // Find pairs with sum
+    public static void findPairsWithSum(int[] arr, int targetSum) {
+        // Step 1: Sort the array
+        mergeSort(arr, 0, arr.length - 1);
+        System.out.println("Sorted array: " + Arrays.toString(arr));
+
+        // Step 2: Use two pointers
+        int left = 0;
+        int right = arr.length - 1;
+        boolean found = false;
+
+        System.out.println("Pairs found:");
+        while (left < right) {
+            int sum = arr[left] + arr[right];
+            if (sum == targetSum) {
+                System.out.println("(" + arr[left] + ", " + arr[right] + ")");
+                found = true;
+                left++;
+                right--; // To find all unique pairs
+            } else if (sum < targetSum) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No valid pair found.");
+        }
+    }
+
+    // Main method with input
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input array
+        System.out.print("Enter number of elements in array: ");
+        int n = scanner.nextInt();
+        int[] arr = new int[n];
+        System.out.println("Enter " + n + " integers:");
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        // Input target sum
+        System.out.print("Enter target sum: ");
+        int targetSum = scanner.nextInt();
+
+        // Run algorithm
+        findPairsWithSum(arr, targetSum);
+    }
+}
