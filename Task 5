@@ -1,0 +1,86 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class MedianOfTwoSortedArrays {
+
+    // Function to find median and show explanation
+    public static double findMedianSortedArrays(int[] a, int[] b) {
+        int n = a.length;
+        int m = b.length;
+
+        int i = 0, j = 0;
+        int m1 = -1, m2 = -1;
+        int count;
+        int totalLength = n + m;
+
+        // Explain median position(s)
+        if (totalLength % 2 == 1) {
+            System.out.println("Total elements: " + totalLength + " (odd)");
+            System.out.println("Median is the element at index: " + (totalLength / 2));
+        } else {
+            System.out.println("Total elements: " + totalLength + " (even)");
+            System.out.println("Median is the average of elements at indices: " + (totalLength / 2 - 1) + " and " + (totalLength / 2));
+        }
+
+        // Binary-like merge until median positions
+        for (count = 0; count <= totalLength / 2; count++) {
+            m2 = m1;
+
+            if (i != n && (j == m || a[i] <= b[j])) {
+                m1 = a[i];
+                i++;
+            } else {
+                m1 = b[j];
+                j++;
+            }
+        }
+
+        if (totalLength % 2 == 1) {
+            System.out.println("Chosen median element: " + m1);
+            return m1;
+        } else {
+            System.out.println("Chosen median elements: " + m2 + " and " + m1);
+            System.out.println("Median = (" + m2 + " + " + m1 + ") / 2 = " + ((m1 + m2) / 2.0));
+            return (m1 + m2) / 2.0;
+        }
+    }
+
+    // Check if array is sorted
+    public static boolean isSorted(int[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i - 1] > arr[i]) return false;
+        }
+        return true;
+    }
+
+    // Read and show sorted array
+    public static int[] readArray(Scanner scanner, String name) {
+        System.out.print("Enter number of elements in " + name + ": ");
+        int size = scanner.nextInt();
+        int[] arr = new int[size];
+
+        System.out.println("Enter " + size + " integers for " + name + ":");
+        for (int i = 0; i < size; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        if (!isSorted(arr)) {
+            Arrays.sort(arr);
+            System.out.println("Note: " + name + " was not sorted. It has been sorted automatically.");
+        }
+
+        System.out.println("Sorted " + name + ": " + Arrays.toString(arr));
+        return arr;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int[] a = readArray(scanner, "Array A");
+        int[] b = readArray(scanner, "Array B");
+
+        System.out.println("\n--- Calculating Median ---");
+        double median = findMedianSortedArrays(a, b);
+        System.out.println("Final Median: " + median);
+    }
+}
